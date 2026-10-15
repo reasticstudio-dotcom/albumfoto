@@ -4,50 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Client Proofing Foto</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Tailwind CSS v3 (Stabil & Aman) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
 
-    <!-- BAGIAN 1: FORM ADMIN (DITAMPILKAN JIKA BELUM ADA ALBUM) -->
+    <!-- BAGIAN 1: FORM ADMIN -->
     <div id="admin-view" class="max-w-xl mx-auto p-4 sm:p-8">
-        <div class="bg-white rounded-3xl shadow-sm p-6 sm:p-8 border border-slate-200">
+        <div class="bg-white rounded-2xl shadow-md p-6 sm:p-8 border border-slate-200 mt-6">
             <div class="text-center mb-6">
                 <h1 class="text-2xl font-bold text-slate-900">📸 Studio Proofing Manager</h1>
-                <p class="text-xs text-slate-500 mt-1">Buat album klien dengan cepat dalam satu link web.</p>
+                <p class="text-xs text-slate-500 mt-1">Buat album klien dengan mudah dalam satu web.</p>
             </div>
             
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Nama Klien / Album</label>
-                    <input type="text" id="input-name" placeholder="Contoh: Bayu & Keluarga" class="w-full border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="input-name" placeholder="Contoh: Bayu & Keluarga" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Batas Maksimal Foto Dipilih</label>
-                    <input type="number" id="input-limit" placeholder="Contoh: 10" class="w-full border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="number" id="input-limit" placeholder="Contoh: 10" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Daftar Link Foto Google Drive / Gambar</label>
-                    <textarea id="input-photos" rows="4" placeholder="Tempel link foto satu per baris atau pisahkan dengan koma&#10;https://.../foto1.jpg&#10;https://.../foto2.jpg" class="w-full border border-slate-200 rounded-xl p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                    <p class="text-[11px] text-slate-400 mt-1">Tip: Masukkan link direct preview gambar dari Google Drive atau link internet publik.</p>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Daftar Link Foto (URL Gambar)</label>
+                    <textarea id="input-photos" rows="5" placeholder="https://images.unsplash.com/photo-1...?auto=format&fit=crop&w=500&#10;https://images.unsplash.com/photo-2...?auto=format&fit=crop&w=500" class="w-full border border-slate-300 rounded-xl p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                    <p class="text-[11px] text-slate-400 mt-1">Masukkan link direct gambar (pisahkan dengan baris baru / enter).</p>
                 </div>
 
-                <button onclick="bukaAlbumKlien()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 cursor-pointer shadow-sm">
+                <button onclick="bukaAlbumKlien()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 cursor-pointer shadow">
                     Buka / Preview Tampilan Klien
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- BAGIAN 2: TAMPILAN KLIEN (MUNCUL OTOMATIS SAAT MENU DIBUKA) -->
+    <!-- BAGIAN 2: TAMPILAN KLIEN -->
     <div id="client-view" class="hidden min-h-screen pb-12">
-        <!-- Header Klien -->
-        <header class="bg-white shadow-sm sticky top-0 z-30 border-b border-slate-100">
+        <header class="bg-white shadow-sm sticky top-0 z-30 border-b border-slate-200">
             <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
                 <div>
-                    <button onclick="kembaliKeAdmin()" class="text-xs text-indigo-600 font-semibold hover:underline mb-1 block">← Kembali ke Menu Admin</button>
+                    <button onclick="kembaliKeAdmin()" class="text-xs text-indigo-600 font-semibold hover:underline mb-1 block cursor-pointer">← Kembali ke Menu Admin</button>
                     <h1 class="text-xl font-bold text-slate-900">Pilih Foto: <span id="client-title" class="text-indigo-600">Album</span></h1>
                 </div>
                 <div class="bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-xl text-sm flex items-center gap-2">
@@ -57,22 +56,18 @@
             </div>
         </header>
 
-        <!-- Main Galeri -->
         <main class="max-w-5xl mx-auto px-4 mt-6">
-            <!-- Alert Kuota -->
             <div id="alert-box" class="hidden mb-6 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
                 ⚠️ <span id="alert-text">Batas maksimal pemilihan foto sudah tercapai!</span>
             </div>
 
-            <!-- Grid Foto -->
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="gallery-grid"></div>
 
-            <!-- Bagian Catatan & Kirim WA -->
             <div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 <h2 class="text-base font-bold text-slate-900 mb-2">Catatan / Request Edit Khusus</h2>
-                <textarea id="catatan" rows="3" class="w-full border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tulis catatan di sini..."></textarea>
+                <textarea id="catatan" rows="3" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tulis catatan jika ada..."></textarea>
                 
-                <button onclick="kirimKeWhatsApp()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                <button onclick="kirimKeWhatsApp()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 cursor-pointer shadow">
                     <span>Kirim Pilihan ke WhatsApp Admin</span>
                 </button>
             </div>
@@ -100,11 +95,9 @@
             document.getElementById('client-title').textContent = name.toUpperCase();
             document.getElementById('max-limit').textContent = currentMax;
 
-            // Parsing link foto (bisa pakai koma atau enter baris baru)
-            let photos = photosRaw.split(/[\n,]+/).map(p => p.trim()).filter(p => p.length > 0);
+            let photos = photosRaw.split(/\r?\n/).map(p => p.trim()).filter(p => p.length > 0);
             renderGallery(photos);
 
-            // Sembunyikan admin, tampilkan klien
             document.getElementById('admin-view').classList.add('hidden');
             document.getElementById('client-view').classList.remove('hidden');
             window.scrollTo(0, 0);
@@ -126,8 +119,8 @@
                 card.innerHTML = `
                     <div class="relative aspect-square bg-slate-100 overflow-hidden">
                         <img src="${url}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        <label class="absolute top-3 right-3 cursor-pointer z-10 bg-white/90 p-1.5 rounded-full shadow">
-                            <input type="checkbox" name="foto" value="${fileName} (${url})" class="foto-checkbox w-5 h-5 accent-indigo-600 rounded cursor-pointer">
+                        <label class="absolute top-3 right-3 cursor-pointer z-10 bg-white/90 p-2 rounded-full shadow">
+                            <input type="checkbox" name="foto" value="${fileName}" class="foto-checkbox w-5 h-5 accent-indigo-600 rounded cursor-pointer">
                         </label>
                     </div>
                     <div class="p-3 text-center text-xs font-medium text-slate-600 truncate">
@@ -137,7 +130,6 @@
                 grid.appendChild(card);
             });
 
-            // Logika Checkbox & Kuota
             const checkboxes = document.querySelectorAll('.foto-checkbox');
             const counter = document.getElementById('counter');
             const alertBox = document.getElementById('alert-box');
@@ -178,8 +170,8 @@
                 return;
             }
 
-            const adminPhone = "6281234567890"; // Ganti dengan nomor WhatsApp Anda (Awali 62)
-            const pesan = `Halo Admin, saya sudah memilih foto untuk album *${currentAlbumName}*:\n\n*Jumlah Pilihan:* ${selected.length} / ${currentMax}\n*Daftar Foto:*\n- ${selected.join('\n- ')}\n\n*Catatan Edit:* ${catatan || '-'}`;
+            const adminPhone = "6281234567890"; // Ganti dengan nomor WhatsApp Anda
+            const pesan = `Halo Admin, saya sudah memilih foto untuk album *${currentAlbumName}*:\n\n*Jumlah Pilihan:* ${selected.length} / ${currentMax}\n*Daftar File:*\n- ${selected.join('\n- ')}\n\n*Catatan Edit:* ${catatan || '-'}`;
             
             window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(pesan)}`, '_blank');
         }
